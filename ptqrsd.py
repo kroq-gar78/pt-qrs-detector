@@ -7,8 +7,8 @@ import numpy
 
 ###Senal
 record  = '104'
-data, info = rdsamp(record, 313, 314)
-ann = rdann(record, 'atr', 313, 314)
+data, info = rdsamp(record, 301, 320)
+ann = rdann(record, 'atr', 301, 320)
 
 time = data[:, 1] #in seconds.
 sig1 = data[:, 2]
@@ -17,7 +17,7 @@ sig2 = data[:, 3]
 ann1 = ann[:, 0]
 ann2 = ann[:, 1]
 
-
+print info['samp_freq']
 
 ######################
 # FILTER
@@ -71,7 +71,7 @@ for i in range(0,Nwindow):
 
 for i in range(Nwindow,len(y4)):
     acum = acum + y4[i]-y4[i-Nwindow]
-    if acum < 80:
+    if acum < 40:
         y5.append(0)
     else:
         y5.append(acum)
@@ -80,7 +80,7 @@ y6 = list(numpy.diff(y5)) + [0]
 
 y5 = list(y5[(Nwindow/2-1):len(y5)]) + list(signal.zeros((Nwindow/2-1)))
 
-signal = y5
+signaly = y5
 wpk = 0.125
 
 PEAKI = 1
@@ -92,13 +92,36 @@ NPKI = wpk*PEAKI+(1-wpk)*NPKI
 TH1 = NPKI + 0.25*(SPKI-NPKI)
 TH2 = 0.5*TH1
 
-pylab.plot(time, signal, 'k')
+i=0
+maximo = 0
+counter = 200
+maximos_locales = []
+while(i < len(signaly)):
+    if signaly[i] > signaly[maximo]:
+        maximo = i
+        counter = 200
+    else:
+        counter-=1
+    if counter == 0 :
+        maximos_locales.append(maximo)
+        counter = 200
+        if (i + 300) < len(signaly):
+            maximo = i+300
+    i+=1
 
-#i=0
-#while(i <= len(signal))
-#    if signal[i] > TH1:
-#        if signal[i+1] < signal[i]:
-#            max = i
+print maximos_locales
+
+
+marcas = signal.zeros(len(signaly))
+for i in maximos_locales:
+    marcas[i]=95
+
+pylab.subplot(211)
+pylab.plot(time, y1, 'k')
+
+pylab.subplot(212)
+pylab.plot(time, marcas, 'o')
+pylab.plot(time, signaly, 'k')
 
 #pylab.subplot(411)
 #pylab.plot(time, y1, 'k')
