@@ -17,7 +17,7 @@ sig2 = data[:, 3]
 ann1 = ann[:, 0]
 ann2 = ann[:, 1]
 
-print info['samp_freq']
+Fs = info['samp_freq']
 
 ######################
 # FILTER
@@ -57,7 +57,7 @@ for i in y3:
 
 ######################
 # Moving Windows Integration
-Nwindow = 30
+Nwindow = int(0.15 * Fs) # window of 150 ms
 
 y5 = []
 for i in range(0,Nwindow):
