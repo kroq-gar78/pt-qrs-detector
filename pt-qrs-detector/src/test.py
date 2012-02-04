@@ -35,6 +35,8 @@ for i in range(42):
     buffer.append(sample)
 
 ### Procesamiento
-output = [0,0,0]
+output = []
 while 1:
-    output = 
+    sample = signal.pop()
+    y = 
+    output.append()

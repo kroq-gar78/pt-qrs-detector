@@ -1,0 +1,251 @@
+
+%TP genérico
+
+
+
+%Configuracion del documento
+
+%Tamaño de letra principal:
+
+\documentclass[12pt]{article}
+
+
+%Título y autor(es):
+
+\title{Título del TP}
+
+\author{Sergio}
+
+
+%Tamaño de página y los márgenes:
+
+\usepackage[a4paper,headheight=16pt]{geometry}
+\textwidth      =  450pt     %Ancho del cuerpo
+\textheight     =  548pt     %Largo del cuerpo
+\topmargin      =  0pt       %Agrega espacio en el margen superior
+\oddsidemargin  =  0pt       %+ margen izquierdo en paginas impares
+\evensidemargin =  0pt       %+ margen derecho en paginas impares
+
+
+% Vamos a escribir en castellano:
+
+\usepackage[spanish]{babel}
+
+%instalar texlive-lang-spanish
+% Reconocer acentos y caracteres no ingleses:
+
+\usepackage[utf8]{inputenc}
+
+
+% Cabecera y pie de página personalizadas
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+
+
+
+% Hago que en la cabecera de página se muestre a la derecha la sección,
+% y en el pie, en número de página a la derecha:
+\renewcommand{\sectionmark}[1]{\markboth{}{\thesection\ \ #1}}
+\lhead{}
+\chead{}
+\rhead{\rightmark}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+
+
+%numeracion especial para tablas, figuras y ecuaciones
+
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+
+%Agregar notas al pie en tablas:
+\usepackage{threeparttable}
+
+
+%Incluir Graficos
+\usepackage{graphicx}
+
+
+%Usar subfiguras: (al estilo Figura 2.3(b) )
+\usepackage{subfigure}
+% Para esto es necesario texlive-latex-recommended o texlive-latex-extra
+
+
+%Numero de figuras en negrita
+
+\usepackage[hang,bf]{caption}
+
+
+% Todas las imágenes están en el directorio tp-img:
+
+\newcommand{\imgdir}{tp-img}
+\graphicspath{{\imgdir/}}
+
+% uso de colores
+\usepackage{color}
+
+
+%Para embeber código de lenguajes como Matlab, C, html, etc.
+
+\usepackage{listings}
+\lstset{ frame=Ltb, 
+	framerule=0pt, 
+	aboveskip=0.5cm, 
+	framextopmargin=3pt, 
+	framexbottommargin=3pt, 
+	framexleftmargin=0.4cm, 
+	framesep=0pt, rulesep=.4pt, 
+	backgroundcolor=\color{gray}, 
+	rulesepcolor=\color{black}, 
+	showstringspaces = false, 
+	basicstyle=\small\ttfamily, 
+	commentstyle=\color{gray}, 
+	keywordstyle=\bfseries
+	}
+
+
+	%rulesepcolor=\color{black},
+	%stringstyle=\ttfamily,
+	%showstringspaces = false,
+	%basicstyle=\small\ttfamily,
+	%commentstyle=\color{gray},
+	%keywordstyle=\bfseries,
+
+	%numbers=left,
+	%numbersep=15pt,
+	%numberstyle=\tiny,
+	%numberfirstline = false,
+	%breaklines=true
+
+
+%Para colocar hipervinculos
+\usepackage[dvipdfm,colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+
+
+%Para hacer matrices y digramas de flujo sencillos
+%\usepackage[all]{xy}
+
+
+\usepackage{pdfpages}
+
+
+
+%INICIO DEL DOCUMENTO
+%-------------------------------------------------------------------------------
+\begin{document}
+
+
+% CARATULA
+
+%-------------------------------------------------------------------------------
+
+
+\begin{titlepage}
+% Sin cabecera ni pie de página:
+
+\thispagestyle{empty}
+
+% Logo de la facu: 
+\begin{center}
+    \includegraphics[width=10cm]{logo-facu}
+\end{center}
+
+\vfill
+
+% Título:
+\begin{center}
+	\Huge{Monitor HRV en tiempo real}\\
+	\Large{Introducción a Proyectos - TP3}\\
+	\Large{Planeamiento}
+\end{center}
+
+\vspace{4cm}
+
+% Integrantes:
+
+\large{
+	\begin{tabbing}
+		Sergio Hinojosa \hspace{1cm} \\84476 \\
+	\end{tabbing}
+}
+
+\vfill
+
+% Fecha o cuatrimestre:
+
+\flushright{2011}
+
+\end{titlepage}
+
+
+% Hago que las páginas se comiencen a contar a partir de aquí:
+\setcounter{page}{1}
+
+
+%INDICE
+
+%-------------------------------------------------------------------------------
+
+% Pongo el índice en una página aparte:
+
+%\tableofcontents
+
+%\newpage
+
+
+
+%-------------------------------------------------------------------------------
+%incluir un pdf
+%\includepdf{tareas.pdf} 
+
+% Inicio del TP:
+\section{Objetivo}
+
+\section{Introducción}
+
+\section{Tareas a realizar}
+
+\section{Duración de la tareas}
+
+\begin{itemize}
+\item Tiempo optimista ($t_o$). Es el tiempo mínimo en que se pudiere realizar
+  el proceso (en las mejores condiciones) cumpliendo con lo mínimo establecido.
+\item Tiempo pesimista ($t_p$). Indica el mayor tiempo que se considera que
+  pudiere demandar la tarea bajo las peores condiciones.
+\item Tiempo más probable ($t_m$). Es el tiempo que lleva la tarea en
+  condiciones normales de realización.
+\end{itemize}
+
+%\begin{figure}[htb]
+%	\centering
+%	\includegraphics[width=8cm]{gant}
+	%\caption{}
+	%\label{fig:figura1}
+%\end{figure}
+
+\subsection{Pert}
+
+
+[1]\href{http://www.conicet.gov.ar/scp/search.php?page=1&keywords=ecg}{http://www.conicet.gov.ar/scp/search.php?page=1\&keywords=ecg}.
+
+\subsection{Ciclo de vida del producto}
+
+
+\begin{tabular}{c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | c | }
+   Mes & 1 & 2 & 4 & 6 & 8 & 10 & 12 & 14 & 16 & 18 & 20 & 22 & 24 & 26 & 28 & 30\\
+   \hline
+   Unidades & 20 & 40 & 48 & 57 & 59 & 64 & 66 & 68 & 69 & 70 & 70 & 70 & 70 & 70 & 70 & 69\\
+	\hline
+   Mes  & 32 & 34 & 36 & 38 & 40 & 42 & 44 & 46 & 48 & 50 & 52 & 54 & 56 & 58 & 60 \\
+	\hline
+   Unidades  & 69 & 68 & 67 & 65 & 63 & 60 & 57 & 54 & 50 & 47 & 42 & 39 & 33 & 30 & 26 \\
+\end{tabular}
+
+
+\end{document}
