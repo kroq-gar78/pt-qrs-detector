@@ -35,4 +35,7 @@ class buffer(deque):
     def get(self,position):
         array = numpy.array(self.buffer)
         return array[position]
-        
+    
+    def sum(self):
+        array = numpy.array(self.buffer)
+        return array.sum()

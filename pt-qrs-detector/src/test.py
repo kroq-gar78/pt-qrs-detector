@@ -5,7 +5,7 @@ Created on Jan 27, 2012
 '''
 from wfdbtools import rdsamp, rdann, plot_data
 import numpy
-from buffer import buffer
+from buffer import buffer as cola
 from pylab import plot, show, subplot
 
 ### Senal
@@ -33,51 +33,44 @@ print len(signal1)
 
 ### Carga inicial de la senal a un emulador de lectura en tiempo real
 length = len(signal1)
-signal = buffer(length)
+signal = cola(length)
 for sample in signal1:
     signal.append(sample)
 
 ### Carga inicial del buffer  
-buffer = buffer(46)    
+buffer = cola(46)    
 for i in range(46):
     sample = signal.pop()
     buffer.append(sample)
 
 ### Procesamiento
+
 output = []
+window = cola(Nwindow)
+
 for i in range(6500):
+    ### Filtrado + derivada
     y = (-buffer.get(45)/32.0-5*buffer.get(44)/32.0-3*buffer.get(43)/8.0-5*buffer.get(42)/8.0-7*buffer.get(41)/8.0-9*buffer.get(40)/8.0-21*buffer.get(39)/16.0-21*buffer.get(38)/16.0-9*buffer.get(37)/8.0-7*buffer.get(36)/8.0-5*buffer.get(35)/8.0-3*buffer.get(34)/8.0-5*buffer.get(33)/32.0-buffer.get(32)/32.0+buffer.get(29)+4*buffer.get(28)+7*buffer.get(27)+8*buffer.get(26)+8*buffer.get(25)+8*buffer.get(24)+6*buffer.get(23)-6*buffer.get(21)-8*buffer.get(20)+8*buffer.get(19)-8*buffer.get(18)-7*buffer.get(17)-4*buffer.get(16)-buffer.get(15)+buffer.get(13)/32.0+5*buffer.get(12)/32.0+3*buffer.get(11)/8.0+5*buffer.get(10)/8.0+7*buffer.get(9)/8.0+9*buffer.get(8)/8.0+21*buffer.get(7)/16.0+21*buffer.get(6)/16.0+9*buffer.get(5)/8.0+7*buffer.get(4)/8.0+5*buffer.get(3)/8.0+3*buffer.get(2)/8.0+5*buffer.get(1)/32.0+buffer.get(0)/32.0)*Fs/(8)
+    
+    ### cuadrado de la senial
+    window.append(y*y)
+    
+    ### Integrado
+    acum = window.sum()
+    if acum < 8000000:
+        output.append(0)
+    else:
+        output.append(acum)
+    
     
     sample = signal.pop()
     buffer.append(sample)
-    output.append(y)
+
 output = list(numpy.zeros(44)) + output + list(numpy.zeros(296))
 print len(output)
 
 ###########
-
-y4 = []
-for i in output:
-    y4.append(i*i)
-
-Nwindow = int(0.15 * Fs) # window of 150 ms
-
-y5 = []
-for i in range(0,Nwindow):
-    acum = 0
-    for j in range(0,i):
-        acum = acum + y4[j]
-    if acum < 8500000:
-        y5.append(0)
-    else:
-        y5.append(acum)
-
-for i in range(Nwindow,len(y4)):
-    acum = acum + y4[i]-y4[i-Nwindow]
-    if acum < 8500000:
-        y5.append(0)
-    else:
-        y5.append(acum)
+y5 = output
 
 y6 = list(numpy.diff(y5)) + [0]
 
