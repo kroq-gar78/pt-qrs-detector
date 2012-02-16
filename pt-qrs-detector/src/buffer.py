@@ -39,3 +39,7 @@ class buffer(deque):
     def sum(self):
         array = numpy.array(self.buffer)
         return array.sum()
+    
+    def getarray(self):
+        array = numpy.array(self.buffer)
+        return array
