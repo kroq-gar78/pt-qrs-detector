@@ -12,8 +12,8 @@ import numpy
 
 ###Senal
 record  = '104'
-data, info = rdsamp(record, 101, 320)
-ann = rdann(record, 'atr', 101, 320)
+data, info = rdsamp(record, 0, 6)
+ann = rdann(record, 'atr', 0, 6)
 
 time = data[:, 1] #in seconds.
 sig1 = data[:, 2]
@@ -115,14 +115,20 @@ while(i < len(signaly)):
     i+=1
 
 print maximos_locales
-
+print ann1
+print Fs
 
 marcas = signal.zeros(len(signaly))
 for i in maximos_locales:
-    marcas[i]=140
+    marcas[i]=100
+    
+ann3 = signal.zeros(len(signaly))
+for i in ann1:
+    ann3[i]=1
 
 pylab.subplot(211)
-pylab.plot(time, y1, 'k')
+pylab.plot(time, ann3, 'o')
+pylab.plot(time, sig1, 'k')
 
 pylab.subplot(212)
 pylab.plot(time, marcas, 'o')

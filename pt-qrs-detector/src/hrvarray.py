@@ -9,9 +9,7 @@ class array:
     classdocs
     '''
     def append(self,r):
-#        print str(r) + "-" + str(self.array[self.len])
-        ultimo = r-self.array[self.len]
-        self.array.append(ultimo)
+        self.array.append(r)
         self.len += 1
         
     def rrav(self):
