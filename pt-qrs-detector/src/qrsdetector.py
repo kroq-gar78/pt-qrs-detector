@@ -14,13 +14,13 @@ def detector(signal, Fs, ann, time, start, stop):
     print "Signal length: " + str(len(signal))
     
     ### Parametros iniciales
-    wpk = 0.175
+    wpk = 0.125
     PEAKI = 17000000
     SPKI = 0.95*PEAKI
     NPKI = 0.3*PEAKI
     SPKI = wpk*PEAKI+(1-wpk)*SPKI
     NPKI = wpk*PEAKI+(1-wpk)*NPKI
-    TH1 = NPKI + 0.21*(SPKI-NPKI)
+    TH1 = NPKI + 0.25*(SPKI-NPKI)
     TH2 = 0.5*TH1
     Nwindow = int(0.15 * Fs) # 150ms
     
@@ -40,21 +40,18 @@ def detector(signal, Fs, ann, time, start, stop):
     
     ### Carga inicial del buffer  
     buffer = deque(46)    
-    for i in range(23):
+    for i in range(22):
         sample = rtsignal.pop()
         buffer.append(sample)
         
-    ### Procesamiento
+####### Procesamiento ###############################
     
     maximum = 0
     counter = 100
-    qrs = [0]
     posmax = 1
-    
     refractario = 0
+    qrs = [0]
     
-    buffer = deque(46)
-    t0 = timer.clock()
     for i in range(0,len(signal)):
         array = buffer.getarray()
         ## Filtrado
@@ -73,7 +70,7 @@ def detector(signal, Fs, ann, time, start, stop):
         signal_integrated.append(acum)
         
         if refractario == 0:
-            if acum > max:
+            if acum > maximum:
                 maximum = acum
                 posmax = i
                 counter = 100
@@ -103,43 +100,56 @@ def detector(signal, Fs, ann, time, start, stop):
         sample = rtsignal.pop()
         buffer.append(sample)
     
-    t = timer.clock() - t0
+#########################################
+
+    ### sincronizacion
+    init = 47
+    signal_integrated = signal_integrated[init:len(signal_integrated)] + list(numpy.zeros(init))
     
-    print "tiempo: "  + str(t)
     
-    ###########    
-    marcas = numpy.zeros(len(signal))
-    for i in qrs:
-        marcas[i]=3000000 
+    marks = numpy.zeros(len(signal))
+    for i in range(len(qrs)):
+        qrs[i]-=init
+        marks[qrs[i]]=20000000 
+        
+    ann2 = numpy.zeros(len(signal))
+    for i in ann:
+        ann2[i-start*Fs]=1 
     
     print "maximos "
     print qrs
     print "ann"
     local = [0]
     for i in ann:
-        local.append(i-start*Fs)
+        local.append(i-start*Fs+1)
     print local
     
     ##########
     
-    subplot(211)
+    subplot(311)
     #plot(time, signal, 'k')
-    plot(time, signal_filtered, 'k')
-    #axis([316, stop, -2, 2])
+    stem(time, signal_filtered, 'k')
+    axis([12.2, 12.5, -20, 40])
     
-    subplot(212)
+    subplot(312)
     #plot(time,umbral,'r')
-    #plot(time, marcas, 'o')
-    plot(time, signal, 'k')
-    #axis([316, stop, 0, 8000000])
+    plot(time, marks, 'or')
+    stem(time, signal_integrated, 'k')
+    axis([12.2, 12.5, 0, 45000000])
+    subplot(313)
+    #plot(time,umbral,'r')
+#    plot(time, marks, 'og')
+    plot(time, ann2, 'or')
+    stem(time, signal, 'k')
+    axis([12.2, 12.5, -1 , 2])
     show()
     
 
 if __name__ == '__main__':
     ### Parametros
     record  = '104'
-    start = 10
-    stop = 15
+    start = 8
+    stop = 20
         
     ### Senal
     data, info = rdsamp(record, start, stop)
