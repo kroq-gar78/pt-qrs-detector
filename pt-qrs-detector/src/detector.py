@@ -127,8 +127,8 @@ for i in ann1:
     ann3[i]=1
 
 pylab.subplot(211)
-pylab.plot(time, ann3, 'o')
-pylab.plot(time, sig1, 'k')
+#pylab.plot(time, ann3, 'o')
+pylab.plot(time, y2, 'k')
 
 pylab.subplot(212)
 pylab.plot(time, marcas, 'o')

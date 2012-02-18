@@ -2,10 +2,10 @@
 Created on Jan 27, 2012
 @author: Sergio
 '''
-from collections import deque
+from collections import deque as originaldeque
 import numpy
 
-class buffer(deque):
+class deque(originaldeque):
     '''
     Buffer de longitud fija. Inicialmente lleno de 0.0
     '''
@@ -14,7 +14,7 @@ class buffer(deque):
         Constructor
         '''
         self.len = length
-        self.buffer = deque(numpy.zeros(length))
+        self.buffer = originaldeque(numpy.zeros(length))
         
     def append(self,elemento):
         self.buffer.append(elemento)
@@ -29,7 +29,7 @@ class buffer(deque):
     
     def purge(self):
         array = numpy.array(self.buffer)
-        self.buffer = deque(numpy.zeros(self.length))
+        self.buffer = originaldeque(numpy.zeros(self.length))
         return array
     
     def get(self,position):
