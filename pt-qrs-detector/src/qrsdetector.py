@@ -10,6 +10,40 @@ from pylab import plot, show, subplot, stem, axis
 import hrvarray
 import time as timer
 
+'''def searchback(qrs, hrv, SPKI, NPKI, TH2):
+    
+    refractario = 0
+    maximum = 0
+    counter = 100
+    wpk = 0.25
+    
+    if refractario == 0:
+        if acum > maximum:
+            maximum = acum
+            posmax = i
+            counter = 100
+        else:
+            counter-=1
+            
+        if counter == 0:
+            if maximum > TH2:
+                qrs.append(posmax)
+                pos_last_r = len(qrs)
+                rr = qrs[pos_last_r-1] - qrs[pos_last_r-2]
+                hrv.append(rr)
+                refractario = int(hrv.rrav1()/4)
+                PEAKI = maximum
+                SPKI = wpk*PEAKI+(1-wpk)*SPKI
+            else:
+                PEAKI = maximum
+                NPKI = wpk*PEAKI+(1-wpk)*NPKI
+                    
+            counter = 100
+            maximum = 0
+            TH1 = NPKI + 0.25*(SPKI-NPKI) #Actualizo umbral
+    else:
+        refractario -= 1'''
+        
 def detector(signal, Fs, ann, time, start, stop):
     print "Signal length: " + str(len(signal))
     
@@ -83,7 +117,7 @@ def detector(signal, Fs, ann, time, start, stop):
                     pos_last_r = len(qrs)
                     rr = qrs[pos_last_r-1] - qrs[pos_last_r-2]
                     hrv.append(rr)
-                    refractario = int(hrv.rrav()/4)
+                    refractario = int(hrv.getrrav1()/4)
                     PEAKI = maximum
                     SPKI = wpk*PEAKI+(1-wpk)*SPKI
                 else:
@@ -128,20 +162,20 @@ def detector(signal, Fs, ann, time, start, stop):
     
     subplot(311)
     #plot(time, signal, 'k')
-    stem(time, signal_filtered, 'k')
-    axis([12.2, 12.5, -20, 40])
+    plot(time, signal_filtered, 'k')
+#    axis([12.2, 12.5, -20, 40])
     
     subplot(312)
     #plot(time,umbral,'r')
     plot(time, marks, 'or')
-    stem(time, signal_integrated, 'k')
-    axis([12.2, 12.5, 0, 45000000])
+    plot(time, signal_integrated, 'k')
+#    axis([12.2, 12.5, 0, 45000000])
     subplot(313)
     #plot(time,umbral,'r')
 #    plot(time, marks, 'og')
     plot(time, ann2, 'or')
-    stem(time, signal, 'k')
-    axis([12.2, 12.5, -1 , 2])
+    plot(time, signal, 'k')
+#    axis([12.2, 12.5, -1 , 2])
     show()
     
 
