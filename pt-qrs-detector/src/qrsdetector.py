@@ -10,39 +10,46 @@ from pylab import plot, show, subplot, stem, axis
 import hrvarray
 import time as timer
 
-'''def searchback(qrs, hrv, SPKI, NPKI, TH2):
-    
+def searchback(signal, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2):
+    SPKI_local = SPKI
+    NPKI_local = NPKI
+    len_signal = len(signal)
     refractario = 0
     maximum = 0
     counter = 100
     wpk = 0.25
-    
-    if refractario == 0:
-        if acum > maximum:
-            maximum = acum
-            posmax = i
-            counter = 100
-        else:
-            counter-=1
-            
-        if counter == 0:
-            if maximum > TH2:
-                qrs.append(posmax)
-                pos_last_r = len(qrs)
-                rr = qrs[pos_last_r-1] - qrs[pos_last_r-2]
-                hrv.append(rr)
-                refractario = int(hrv.rrav1()/4)
-                PEAKI = maximum
-                SPKI = wpk*PEAKI+(1-wpk)*SPKI
+    print time_normalsearch[0]
+    for i in range(time_normalsearch[0] + int(hrv.getrrav1()/2),len_signal):
+        acum = signal[i]
+
+        if refractario <= 0:
+                        
+            if acum > maximum:
+                maximum = acum
+                posmax = i
+                counter = 100
             else:
-                PEAKI = maximum
-                NPKI = wpk*PEAKI+(1-wpk)*NPKI
-                    
-            counter = 100
-            maximum = 0
-            TH1 = NPKI + 0.25*(SPKI-NPKI) #Actualizo umbral
-    else:
-        refractario -= 1'''
+                counter-=1
+
+            if counter == 0:
+                if maximum > TH2:
+                    qrs.append(posmax)
+                    pos_last_r = len(qrs)
+                    rr = qrs[pos_last_r-1] - qrs[pos_last_r-2]
+                    hrv.append(rr)
+                    refractario = int(hrv.getrrav1()/4)
+                    PEAKI = maximum
+                    SPKI_local = wpk*PEAKI+(1-wpk)*SPKI_local
+                    print " MAXIMO ENCONTRADO " + str(posmax)
+                else:
+                    PEAKI = maximum
+                    NPKI_local = wpk*PEAKI+(1-wpk)*NPKI_local
+                        
+                counter = 100
+                maximum = 0
+                TH2 = NPKI_local + 0.25*(SPKI_local-NPKI_local) #Actualizo umbral
+        else:
+            refractario -= 1
         
 def detector(signal, Fs, ann, time, start, stop):
     print "Signal length: " + str(len(signal))
@@ -85,6 +92,7 @@ def detector(signal, Fs, ann, time, start, stop):
     posmax = 1
     refractario = 0
     qrs = [0]
+    time_normalsearch = [0,1000]
     
     for i in range(0,len(signal)):
         array = buffer.getarray()
@@ -103,7 +111,7 @@ def detector(signal, Fs, ann, time, start, stop):
         acum = window.sum()
         signal_integrated.append(acum)
         
-        if refractario == 0:
+        if refractario <= 0:
             if acum > maximum:
                 maximum = acum
                 posmax = i
@@ -118,6 +126,8 @@ def detector(signal, Fs, ann, time, start, stop):
                     rr = qrs[pos_last_r-1] - qrs[pos_last_r-2]
                     hrv.append(rr)
                     refractario = int(hrv.getrrav1()/4)
+                    time_normalsearch[0] = posmax
+                    time_normalsearch[1] = int(hrv.getrrav2()*1.66)
                     PEAKI = maximum
                     SPKI = wpk*PEAKI+(1-wpk)*SPKI
                 else:
@@ -127,8 +137,15 @@ def detector(signal, Fs, ann, time, start, stop):
                 counter = 100
                 maximum = 0
                 TH1 = NPKI + 0.25*(SPKI-NPKI) #Actualizo umbral
+                TH2 = 0.5*TH1
         else:
             refractario -= 1
+            
+        time_normalsearch[1] -= 1
+        #print time_normalsearch[1]
+        if time_normalsearch[1] == 0:
+            print "modo searchback"
+            searchback(signal_integrated, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2)
         
         umbral.append(TH1)
         sample = rtsignal.pop()
@@ -182,8 +199,8 @@ def detector(signal, Fs, ann, time, start, stop):
 if __name__ == '__main__':
     ### Parametros
     record  = '104'
-    start = 8
-    stop = 20
+    start = 110
+    stop = 145
         
     ### Senal
     data, info = rdsamp(record, start, stop)
