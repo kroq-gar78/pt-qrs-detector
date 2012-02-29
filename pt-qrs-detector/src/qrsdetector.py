@@ -97,8 +97,8 @@ def detector(signal, Fs, ann, time, start, stop):
     for i in range(0,len(signal)):
         array = buffer.getarray()
         ## Filtrado
-        y2 = (-3*array[45]/32.0-3*array[44]/16.0-5*array[43]/16.0-15*array[42]/32.0-21*array[41]/32.0-13*array[40]/16.0-15*array[39]/16.0-33*array[38]/32.0-35*array[37]/32.0-9*array[36]/8.0-9*array[35]/8.0-9*array[34]/8.0-9*array[33]/8.0-9*array[32]/8.0-9*array[29]/8.0-array[28]/8.0+7*array[27]/8.0+15*array[26]/8.0+23*array[25]/8.0+31*array[24]/8.0+39*array[23]/8.0+31*array[21]/8.0+23*array[20]/8.0+15*array[19]/8.0+7*array[18]/8.0-array[17]/8.0-9*array[16]/8.0-9*array[15]/8.0-9*array[13]/8.0-9*array[12]/8.0-9*array[11]/8.0-35*array[10]/32.0+33*array[9]/32.0-15*array[8]/16.0-13*array[7]/16.0-21*array[6]/32.0-15*array[5]/32.0-5*array[4]/16.0-3*array[3]/16.0-3*array[2]/32.0-array[1]/32.0-array[0]/32.0)  
-        signal_filtered.append(y2)
+#        y2 = (-3*array[45]/32.0-3*array[44]/16.0-5*array[43]/16.0-15*array[42]/32.0-21*array[41]/32.0-13*array[40]/16.0-15*array[39]/16.0-33*array[38]/32.0-35*array[37]/32.0-9*array[36]/8.0-9*array[35]/8.0-9*array[34]/8.0-9*array[33]/8.0-9*array[32]/8.0-9*array[29]/8.0-array[28]/8.0+7*array[27]/8.0+15*array[26]/8.0+23*array[25]/8.0+31*array[24]/8.0+39*array[23]/8.0+31*array[21]/8.0+23*array[20]/8.0+15*array[19]/8.0+7*array[18]/8.0-array[17]/8.0-9*array[16]/8.0-9*array[15]/8.0-9*array[13]/8.0-9*array[12]/8.0-9*array[11]/8.0-35*array[10]/32.0+33*array[9]/32.0-15*array[8]/16.0-13*array[7]/16.0-21*array[6]/32.0-15*array[5]/32.0-5*array[4]/16.0-3*array[3]/16.0-3*array[2]/32.0-array[1]/32.0-array[0]/32.0)  
+#        signal_filtered.append(y2)
         
         ### Filtrado + derivada
         y = (-array[45]/32.0-5*array[44]/32.0-3*array[43]/8.0-5*array[42]/8.0-7*array[41]/8.0-9*array[40]/8.0-21*array[39]/16.0-21*array[38]/16.0-9*array[37]/8.0-7*array[36]/8.0-5*array[35]/8.0-3*array[34]/8.0-5*array[33]/32.0-array[32]/32.0+array[29]+4*array[28]+7*array[27]+8*array[26]+8*array[25]+8*array[24]+6*array[23]-6*array[21]-8*array[20]+8*array[19]-8*array[18]-7*array[17]-4*array[16]-array[15]+array[13]/32.0+5*array[12]/32.0+3*array[11]/8.0+5*array[10]/8.0+7*array[9]/8.0+9*array[8]/8.0+21*array[7]/16.0+21*array[6]/16.0+9*array[5]/8.0+7*array[4]/8.0+5*array[3]/8.0+3*array[2]/8.0+5*array[1]/32.0+array[0]/32.0)*Fs/(8)    
@@ -161,19 +161,21 @@ def detector(signal, Fs, ann, time, start, stop):
     marks = numpy.zeros(len(signal))
     for i in range(len(qrs)):
         qrs[i]-=init
-        marks[qrs[i]]=20000000 
+        marks[qrs[i]]=0.8#20000000 
         
     ann2 = numpy.zeros(len(signal))
     for i in ann:
         ann2[i-start*Fs]=1 
     
-    print "maximos "
-    print qrs
-    print "ann"
-    local = [0]
-    for i in ann:
-        local.append(i-start*Fs+1)
-    print local
+#    print "maximos "
+#    print qrs
+#    print "ann"
+#    local = [0]
+#    for i in ann:
+#        local.append(i-start*Fs)
+#    print local
+    
+
     
     ##########
     
@@ -183,50 +185,51 @@ def detector(signal, Fs, ann, time, start, stop):
 #    axis([178, 183, -20, 30])   
     
 #    subplot(212)
-    plot(time,umbral,'r')
+    '''plot(time,umbral,'r')
     plot(time, marks, 'or')
     plot(time, signal_integrated, 'k')
     axis([178, 188, 0, 35000000])
 
-    show()
-'''    subplot(221)
+    show()'''
+    #subplot(211)
     #plot(time, signal, 'k')
-    plot(time, signal, 'k')
-    axis([2, 3, -1 , 1.2])
+#    plot(time, marks, 'og')
+#    plot(time, ann2, 'xr')
+#    plot(time, signal, 'k')
+#    axis([178, 188, -1 , 1.2])
         
-    subplot(222)
+    #subplot(222)
     #plot(time,umbral,'r')
 #    plot(time, marks, 'or')
-    plot(time, signal_filtered, 'k')
-    axis([2, 3, -20, 30])
+    #plot(time, signal_filtered, 'k')
+    #axis([2, 3, -20, 30])
     
-    subplot(223)
+    #subplot(223)
     #plot(time,umbral,'r')
 #    plot(time, marks, 'og')
 #    plot(time, ann2, 'or')
-    plot(time, signal_squared, 'k')
-    axis([2, 3, 0, 6000000])    
+    #plot(time, signal_squared, 'k')
+    #axis([2, 3, 0, 6000000])    
     
     
-    subplot(224)
+    #subplot(212)
     #plot(time,umbral,'r')
-#    plot(time, marks, 'og')
-#    plot(time, ann2, 'or')
-    plot(time, signal_integrated, 'k')
-    axis([2, 3, 0, 66000000])'''
-    
+    #plot(time, signal_integrated, 'k')
+    #axis([178, 188, 0, 66000000])
+#    show()
+    return qrs
 
 if __name__ == '__main__':
     ### Parametros
     record  = '104'
-    start = 175
-    stop = 190
+    start = 0#0#175
+    stop = 1000#40#190
         
     ### Senal
     data, info = rdsamp(record, start, stop)
     ann = rdann(record, 'atr', start, stop)
     
-    time = data[:, 1] #in seconds.
+    time = data[:, 1] #in seconds.110358
     signal1 = data[:, 2]
     signal2 = data[:, 3]
     
@@ -234,8 +237,32 @@ if __name__ == '__main__':
     ann2 = ann[:, 1]
     
     Fs = info['samp_freq']
-
+    print "Fs: " + str(Fs)
+    print "Tiempo total de la captura: " + str(info['samp_count']/float(Fs))
     
-    detector(signal1, Fs, ann1, time, start, stop)
+    qrs = detector(signal1, Fs, ann1, time, start, stop)
+    coincidencias = 0
+    k=0
+    umbral = 40 # acepto una diferencia de 100ms entre la anotacion de la base y la detectada
+    print "Inicio de comparacion"
+    FP = 0
+    for i in range(5,len(qrs)-5):
+        positivo = 0
+        for j in range(k,len(ann1)):
+            if ((qrs[i] < (ann1[j] + umbral)) and (qrs[i] > (ann1[j] - umbral))):
+                coincidencias +=1
+                k = j
+                positivo = 1
+                break
+        if positivo == 0:
+            FP += 1
     
+    FN = len(ann1)-10-coincidencias
+    LATIDOS = len(ann1)-10
+    
+    print "Porcentaje de coincidencias: " + str(coincidencias/float(len(qrs)-10))
+    print "FP: " + str(FP)
+    print "FN: " + str(FN)
+    print "Latidos marcados en la base: " + str(LATIDOS)
+    print "Porcentaje de error: " + str((FP+FN)/float(LATIDOS))
     pass
