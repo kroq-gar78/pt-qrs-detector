@@ -18,7 +18,7 @@ def searchback(signal, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2):
     maximum = 0
     counter = 100
     wpk = 0.25
-    print time_normalsearch[0]
+    #print time_normalsearch[0]
     for i in range(time_normalsearch[0] + int(hrv.getrrav1()/2),len_signal):
         acum = signal[i]
 
@@ -40,7 +40,7 @@ def searchback(signal, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2):
                     refractario = int(hrv.getrrav1()/4)
                     PEAKI = maximum
                     SPKI_local = wpk*PEAKI+(1-wpk)*SPKI_local
-                    print " MAXIMO ENCONTRADO " + str(posmax)
+                    #print " MAXIMO ENCONTRADO " + str(posmax)
                 else:
                     PEAKI = maximum
                     NPKI_local = wpk*PEAKI+(1-wpk)*NPKI_local
@@ -56,7 +56,7 @@ def detector(signal, Fs, ann, time, start, stop):
     
     ### Parametros iniciales
     wpk = 0.125
-    PEAKI = 17000000
+    PEAKI = 20000000
     SPKI = 0.95*PEAKI
     NPKI = 0.3*PEAKI
     SPKI = wpk*PEAKI+(1-wpk)*SPKI
@@ -136,7 +136,7 @@ def detector(signal, Fs, ann, time, start, stop):
                         
                 counter = 100
                 maximum = 0
-                TH1 = NPKI + 0.25*(SPKI-NPKI) #Actualizo umbral
+                TH1 = NPKI + 0.21*(SPKI-NPKI) #Actualizo umbral
                 TH2 = 0.5*TH1
         else:
             refractario -= 1
@@ -144,7 +144,7 @@ def detector(signal, Fs, ann, time, start, stop):
         time_normalsearch[1] -= 1
         #print time_normalsearch[1]
         if time_normalsearch[1] == 0:
-            print "modo searchback"
+            #print "modo searchback"
             searchback(signal_integrated, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2)
         
         umbral.append(TH1)
@@ -177,30 +177,50 @@ def detector(signal, Fs, ann, time, start, stop):
     
     ##########
     
-    subplot(311)
-    #plot(time, signal, 'k')
-    plot(time, signal_filtered, 'k')
-#    axis([12.2, 12.5, -20, 40])
+#    subplot(211)
+#    plot(time, marks, 'or')
+#    plot(time, signal_filtered, 'k')
+#    axis([178, 183, -20, 30])   
     
-    subplot(312)
-    #plot(time,umbral,'r')
+#    subplot(212)
+    plot(time,umbral,'r')
     plot(time, marks, 'or')
     plot(time, signal_integrated, 'k')
-#    axis([12.2, 12.5, 0, 45000000])
-    subplot(313)
+    axis([178, 188, 0, 35000000])
+
+    show()
+'''    subplot(221)
+    #plot(time, signal, 'k')
+    plot(time, signal, 'k')
+    axis([2, 3, -1 , 1.2])
+        
+    subplot(222)
+    #plot(time,umbral,'r')
+#    plot(time, marks, 'or')
+    plot(time, signal_filtered, 'k')
+    axis([2, 3, -20, 30])
+    
+    subplot(223)
     #plot(time,umbral,'r')
 #    plot(time, marks, 'og')
-    plot(time, ann2, 'or')
-    plot(time, signal, 'k')
-#    axis([12.2, 12.5, -1 , 2])
-    show()
+#    plot(time, ann2, 'or')
+    plot(time, signal_squared, 'k')
+    axis([2, 3, 0, 6000000])    
+    
+    
+    subplot(224)
+    #plot(time,umbral,'r')
+#    plot(time, marks, 'og')
+#    plot(time, ann2, 'or')
+    plot(time, signal_integrated, 'k')
+    axis([2, 3, 0, 66000000])'''
     
 
 if __name__ == '__main__':
     ### Parametros
     record  = '104'
-    start = 110
-    stop = 145
+    start = 175
+    stop = 190
         
     ### Senal
     data, info = rdsamp(record, start, stop)
