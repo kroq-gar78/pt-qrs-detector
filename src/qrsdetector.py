@@ -20,12 +20,12 @@ def searchback(signal, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2):
     wpk = 0.25
     #print time_normalsearch[0]
     for i in range(time_normalsearch[0] + int(hrv.getrrav1()/2),len_signal):
-        acum = signal[i]
+        now = signal[i]
 
         if refractario <= 0:
                         
-            if acum > maximum:
-                maximum = acum
+            if now > maximum:
+                maximum = now
                 posmax = i
                 counter = 100
             else:
@@ -40,21 +40,21 @@ def searchback(signal, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2):
                     refractario = int(hrv.getrrav1()/4)
                     PEAKI = maximum
                     SPKI_local = wpk*PEAKI+(1-wpk)*SPKI_local
-                    #print " MAXIMO ENCONTRADO " + str(posmax)
+                    #print "MAXIMUM FOUND:" + str(posmax)
                 else:
                     PEAKI = maximum
                     NPKI_local = wpk*PEAKI+(1-wpk)*NPKI_local
                         
                 counter = 100
                 maximum = 0
-                TH2 = NPKI_local + 0.25*(SPKI_local-NPKI_local) #Actualizo umbral
+                TH2 = NPKI_local + 0.25*(SPKI_local-NPKI_local) # Update threshold
         else:
             refractario -= 1
         
 def detector(signal, Fs, ann, time, start, stop):
     print "Signal length: " + str(len(signal))
     
-    ### Parametros iniciales
+    ### Initial parameters
     wpk = 0.125
     PEAKI = 20000000
     SPKI = 0.95*PEAKI
@@ -85,7 +85,7 @@ def detector(signal, Fs, ann, time, start, stop):
         sample = rtsignal.pop()
         buffer.append(sample)
         
-####### Procesamiento ###############################
+####### Processing ###############################
     
     maximum = 0
     counter = 100
@@ -100,14 +100,14 @@ def detector(signal, Fs, ann, time, start, stop):
 #        y2 = (-3*array[45]/32.0-3*array[44]/16.0-5*array[43]/16.0-15*array[42]/32.0-21*array[41]/32.0-13*array[40]/16.0-15*array[39]/16.0-33*array[38]/32.0-35*array[37]/32.0-9*array[36]/8.0-9*array[35]/8.0-9*array[34]/8.0-9*array[33]/8.0-9*array[32]/8.0-9*array[29]/8.0-array[28]/8.0+7*array[27]/8.0+15*array[26]/8.0+23*array[25]/8.0+31*array[24]/8.0+39*array[23]/8.0+31*array[21]/8.0+23*array[20]/8.0+15*array[19]/8.0+7*array[18]/8.0-array[17]/8.0-9*array[16]/8.0-9*array[15]/8.0-9*array[13]/8.0-9*array[12]/8.0-9*array[11]/8.0-35*array[10]/32.0+33*array[9]/32.0-15*array[8]/16.0-13*array[7]/16.0-21*array[6]/32.0-15*array[5]/32.0-5*array[4]/16.0-3*array[3]/16.0-3*array[2]/32.0-array[1]/32.0-array[0]/32.0)  
 #        signal_filtered.append(y2)
         
-        ### Filtrado + derivada
+        ### Filtered + derived
         y = (-array[45]/32.0-5*array[44]/32.0-3*array[43]/8.0-5*array[42]/8.0-7*array[41]/8.0-9*array[40]/8.0-21*array[39]/16.0-21*array[38]/16.0-9*array[37]/8.0-7*array[36]/8.0-5*array[35]/8.0-3*array[34]/8.0-5*array[33]/32.0-array[32]/32.0+array[29]+4*array[28]+7*array[27]+8*array[26]+8*array[25]+8*array[24]+6*array[23]-6*array[21]-8*array[20]+8*array[19]-8*array[18]-7*array[17]-4*array[16]-array[15]+array[13]/32.0+5*array[12]/32.0+3*array[11]/8.0+5*array[10]/8.0+7*array[9]/8.0+9*array[8]/8.0+21*array[7]/16.0+21*array[6]/16.0+9*array[5]/8.0+7*array[4]/8.0+5*array[3]/8.0+3*array[2]/8.0+5*array[1]/32.0+array[0]/32.0)*Fs/(8)    
 
-        ### cuadrado de la senial
+        ### Square of the signal
         window.append(y*y)
         signal_squared.append(y*y)
         
-        ### Integrado
+        ### Integration
         acum = window.sum()
         signal_integrated.append(acum)
         
@@ -136,7 +136,7 @@ def detector(signal, Fs, ann, time, start, stop):
                         
                 counter = 100
                 maximum = 0
-                TH1 = NPKI + 0.21*(SPKI-NPKI) #Actualizo umbral
+                TH1 = NPKI + 0.21*(SPKI-NPKI) # Update threshold
                 TH2 = 0.5*TH1
         else:
             refractario -= 1
@@ -153,7 +153,7 @@ def detector(signal, Fs, ann, time, start, stop):
     
 #########################################
 
-    ### sincronizacion
+    ### synchronization
     init = 47
     signal_integrated = signal_integrated[init:len(signal_integrated)] + list(numpy.zeros(init))
     
@@ -238,31 +238,31 @@ if __name__ == '__main__':
     
     Fs = info['samp_freq']
     print "Fs: " + str(Fs)
-    print "Tiempo total de la captura: " + str(info['samp_count']/float(Fs))
+    print "Total time of the capture: " + str(info['samp_count']/float(Fs))
     
     qrs = detector(signal1, Fs, ann1, time, start, stop)
-    coincidencias = 0
+    matches = 0
     k=0
-    umbral = 40 # acepto una diferencia de 100ms entre la anotacion de la base y la detectada
+    umbral = 40 # accept a difference of 100ms between the annotations and the detector
     print "Inicio de comparacion"
     FP = 0
     for i in range(5,len(qrs)-5):
         positivo = 0
         for j in range(k,len(ann1)):
             if ((qrs[i] < (ann1[j] + umbral)) and (qrs[i] > (ann1[j] - umbral))):
-                coincidencias +=1
+                matches +=1
                 k = j
                 positivo = 1
                 break
         if positivo == 0:
             FP += 1
     
-    FN = len(ann1)-10-coincidencias
-    LATIDOS = len(ann1)-10
+    FN = len(ann1)-10-matches
+    BEATS = len(ann1)-10
     
-    print "Porcentaje de coincidencias: " + str(coincidencias/float(len(qrs)-10))
+    print "Percent of matches: " + str(matches/float(len(qrs)-10))
     print "FP: " + str(FP)
     print "FN: " + str(FN)
-    print "Latidos marcados en la base: " + str(LATIDOS)
-    print "Porcentaje de error: " + str((FP+FN)/float(LATIDOS))
+    print "Beats marked in annotation: " + str(BEATS)
+    print "Percentage of error: " + str((FP+FN)/float(BEATS))
     pass
