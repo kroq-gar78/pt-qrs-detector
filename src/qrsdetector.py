@@ -73,13 +73,13 @@ def detector(signal, Fs, ann, time, start, stop):
     hrv = hrvarray.array()
     window = deque(Nwindow)
     
-    ### Carga inicial de la senal a un emulador de lectura en tiempo real
+    ### Initial charge of the signal reading emulator in real time
     length = len(signal)
     rtsignal = deque(length)
     for sample in signal:
         rtsignal.append(sample)
     
-    ### Carga inicial del buffer  
+    ### Initial loading buffer  
     buffer = deque(46)    
     for i in range(22):
         sample = rtsignal.pop()
