@@ -108,12 +108,12 @@ def detector(signal, Fs, ann, time, start, stop):
         signal_squared.append(y*y)
         
         ### Integration
-        acum = window.sum()
-        signal_integrated.append(acum)
+        now = window.sum()
+        signal_integrated.append(now)
         
         if refractario <= 0:
-            if acum > maximum:
-                maximum = acum
+            if now > maximum:
+                maximum = now
                 posmax = i
                 counter = 100
             else:
@@ -220,12 +220,12 @@ def detector(signal, Fs, ann, time, start, stop):
     return qrs
 
 if __name__ == '__main__':
-    ### Parametros
+    ### Parameters
     record  = '104'
     start = 0#0#175
     stop = 1000#40#190
         
-    ### Senal
+    ### Signal
     data, info = rdsamp(record, start, stop)
     ann = rdann(record, 'atr', start, stop)
     
@@ -243,18 +243,18 @@ if __name__ == '__main__':
     qrs = detector(signal1, Fs, ann1, time, start, stop)
     matches = 0
     k=0
-    umbral = 40 # accept a difference of 100ms between the annotations and the detector
+    threshold = 40 # accept a difference of 100ms between the annotations and the detector
     print "Inicio de comparacion"
     FP = 0
     for i in range(5,len(qrs)-5):
-        positivo = 0
+        positives = 0
         for j in range(k,len(ann1)):
-            if ((qrs[i] < (ann1[j] + umbral)) and (qrs[i] > (ann1[j] - umbral))):
+            if ((qrs[i] < (ann1[j] + threshold)) and (qrs[i] > (ann1[j] - threshold))):
                 matches +=1
                 k = j
-                positivo = 1
+                positives = 1
                 break
-        if positivo == 0:
+        if positives == 0:
             FP += 1
     
     FN = len(ann1)-10-matches

@@ -5,7 +5,7 @@ Created on Jan 27, 2012
 '''
 from wfdbtools import rdsamp, rdann
 import numpy
-from buffer import buffer as cola
+import buffer as cola
 from pylab import plot, show, subplot, stem, axis
 import hrvarray
 import time as timer

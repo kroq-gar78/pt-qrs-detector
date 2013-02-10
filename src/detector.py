@@ -10,7 +10,7 @@ import pylab
 from scipy import signal
 import numpy
 
-###Senal
+### Signal
 record  = '104'
 data, info = rdsamp(record, 0, 6)
 ann = rdann(record, 'atr', 0, 6)
@@ -66,20 +66,20 @@ Nwindow = int(0.15 * Fs) # window of 150 ms
 
 y5 = []
 for i in range(0,Nwindow):
-    acum = 0
+    now = 0
     for j in range(0,i):
-        acum = acum + y4[j]
-    if acum < 80:
+        now = now + y4[j]
+    if now < 80:
         y5.append(0)
     else:
-        y5.append(acum)
+        y5.append(now)
 
 for i in range(Nwindow,len(y4)):
-    acum = acum + y4[i]-y4[i-Nwindow]
-    if acum < 40:
+    now = now + y4[i]-y4[i-Nwindow]
+    if now < 40:
         y5.append(0)
     else:
-        y5.append(acum)
+        y5.append(now)
 
 y6 = list(numpy.diff(y5)) + [0]
 
@@ -98,29 +98,29 @@ TH1 = NPKI + 0.25*(SPKI-NPKI)
 TH2 = 0.5*TH1
 
 i=0
-maximo = 0
+maximum = 0
 counter = 200
-maximos_locales = []
+local_maximums = []
 while(i < len(signaly)):
-    if signaly[i] > signaly[maximo]:
-        maximo = i
+    if signaly[i] > signaly[maximum]:
+        maximum = i
         counter = 200
     else:
         counter-=1
     if counter == 0 :
-        maximos_locales.append(maximo)
+        local_maximums.append(maximum)
         counter = 200
         if (i + 300) < len(signaly):
-            maximo = i+300
+            maximum = i+300
     i+=1
 
-print maximos_locales
+print local_maximums
 print ann1
 print Fs
 
-marcas = signal.zeros(len(signaly))
-for i in maximos_locales:
-    marcas[i]=100
+marked = signal.zeros(len(signaly))
+for i in local_maximums:
+    marked[i]=100
     
 ann3 = signal.zeros(len(signaly))
 for i in ann1:
@@ -131,7 +131,7 @@ pylab.subplot(211)
 pylab.plot(time, y2, 'k')
 
 pylab.subplot(212)
-pylab.plot(time, marcas, 'o')
+pylab.plot(time, marked, 'o')
 pylab.plot(time, signaly, 'k')
 
 #pylab.subplot(411)
