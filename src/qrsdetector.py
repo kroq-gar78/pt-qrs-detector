@@ -243,8 +243,8 @@ if __name__ == '__main__':
     qrs = detector(signal1, Fs, ann1, time, start, stop)
     matches = 0
     k=0
-    threshold = 40 # accept a difference of 100ms between the annotations and the detector
-    print "Inicio de comparacion"
+    threshold = int(.100*Fs) # accept a difference of 100ms between the annotations and the detector
+    print "Start comparison"
     FP = 0
     for i in range(5,len(qrs)-5):
         positives = 0
