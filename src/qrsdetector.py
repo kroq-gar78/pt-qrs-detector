@@ -66,7 +66,7 @@ def detector(signal, Fs, ann, time, start, stop):
     Nwindow = int(0.15 * Fs) # 150ms
     
     ### Arrays
-    umbral =[]
+    threshold =[]
     signal_filtered = []
     signal_integrated = []
     signal_squared = []
@@ -147,7 +147,7 @@ def detector(signal, Fs, ann, time, start, stop):
             #print "modo searchback"
             searchback(signal_integrated, qrs, hrv, time_normalsearch, SPKI, NPKI, TH2)
         
-        umbral.append(TH1)
+        threshold.append(TH1)
         sample = rtsignal.pop()
         buffer.append(sample)
     
@@ -185,7 +185,7 @@ def detector(signal, Fs, ann, time, start, stop):
 #    axis([178, 183, -20, 30])   
     
 #    subplot(212)
-    '''plot(time,umbral,'r')
+    '''plot(time,threshold,'r')
     plot(time, marks, 'or')
     plot(time, signal_integrated, 'k')
     axis([178, 188, 0, 35000000])
@@ -199,13 +199,13 @@ def detector(signal, Fs, ann, time, start, stop):
 #    axis([178, 188, -1 , 1.2])
         
     #subplot(222)
-    #plot(time,umbral,'r')
+    #plot(time,threshold,'r')
 #    plot(time, marks, 'or')
     #plot(time, signal_filtered, 'k')
     #axis([2, 3, -20, 30])
     
     #subplot(223)
-    #plot(time,umbral,'r')
+    #plot(time,threshold,'r')
 #    plot(time, marks, 'og')
 #    plot(time, ann2, 'or')
     #plot(time, signal_squared, 'k')
@@ -213,7 +213,7 @@ def detector(signal, Fs, ann, time, start, stop):
     
     
     #subplot(212)
-    #plot(time,umbral,'r')
+    #plot(time,threshold,'r')
     #plot(time, signal_integrated, 'k')
     #axis([178, 188, 0, 66000000])
 #    show()
